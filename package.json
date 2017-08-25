@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/Deskly/deskly-cli/issues"
   },
-  "homepage": "https://github.com/Deskly/deskly-cli#readme"
+  "homepage": "https://github.com/Deskly/deskly-cli#readme",
+  "dependencies": {
+    "got": "^7.1.0"
+  }
 }
