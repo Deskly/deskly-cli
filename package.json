@@ -2,21 +2,26 @@
   "name": "deskly-cli",
   "version": "1.0.0",
   "description": "the core of a simple reddit desktop image changer.",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "author": "Kaioru",
+  "license": "MIT",
+  "homepage": "https://github.com/Deskly/deskly-cli#readme",
   "repository": {
     "type": "git",
     "url": "https://github.com/Deskly/deskly-cli.git"
   },
-  "author": "Kaioru",
-  "license": "MIT",
   "bugs": {
     "url": "https://github.com/Deskly/deskly-cli/issues"
   },
-  "homepage": "https://github.com/Deskly/deskly-cli#readme",
+  "main": "lib/Deskly.js",
+  "bin": {
+    "deskly": "bin/cli.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
   "dependencies": {
-    "got": "^7.1.0"
+    "commander": "^2.11.0",
+    "got": "^7.1.0",
+    "wallpaper": "^2.5.0"
   }
 }
