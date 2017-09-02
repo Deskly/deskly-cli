@@ -15,7 +15,7 @@ const conf = new Configstore(pkg.name, {
   limit: 50
 })
 
-let d = new Deskly()
+let d = new Deskly(conf.all)
 let dir = __dirname + '/generated/'
 
 commander
