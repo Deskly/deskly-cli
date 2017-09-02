@@ -63,7 +63,7 @@ commander
   .action(() => {
     console.log('Searching for wallpapers..'.green)
     d.getPost().then(post => {
-      console.log(('Downloading ' + post.title + ' by ' + post.author + ' from r/' + post.subreddit).cyan)
+      console.log('Downloading ' + post.title.cyan + ' by ' + post.author.cyan + ' from r/' + post.subreddit.cyan)
       if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir);
       }
@@ -72,7 +72,7 @@ commander
         .pipe(fs.createWriteStream(path))
         .on('finish', function() {
           wallpaper.set(path)
-          console.log(('Aaaand we\'re done! Image to ' + path).cyan)
+          console.log('Aaand we\'re done! Image saved to ' + path.cyan)
         })
     })
   })
