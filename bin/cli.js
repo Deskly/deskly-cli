@@ -7,12 +7,55 @@ const commander = require('commander')
 const wallpaper = require('wallpaper')
 const got = require('got')
 const colors = require('colors');
+const Configstore = require('configstore')
+
+const conf = new Configstore(pkg.name, {
+  subreddits: ['earthporn', 'wallpaper', 'wallpapers'],
+  sort: 'hot',
+  limit: 50
+})
 
 let d = new Deskly()
 let dir = __dirname + '/generated/'
 
 commander
   .version(pkg.version)
+
+commander
+  .command('add-subreddit <subreddit>')
+  .action((subreddit) => {
+    let array = conf.get('subreddits')
+    array.push(subreddit)
+    conf.set('subreddits', array)
+  })
+
+commander
+  .command('remove-subreddit <subreddit>')
+  .action((subreddit) => {
+    let array = conf.get('subreddits')
+    let index = array.indexOf(subreddit);
+    if (index > -1) {
+      conf.set('subreddits', array)
+    }
+  })
+
+commander
+  .command('sort-type <type>')
+  .action((type) => {
+    conf.set('sort', type)
+  })
+
+commander
+  .command('show-config')
+  .action(() => {
+    console.log(conf.all)
+  })
+
+commander
+  .command('clear-config')
+  .action(() => {
+    conf.clear()
+  })
 
 commander
   .command('generate')
