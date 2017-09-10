@@ -3,6 +3,7 @@
 const Deskly = require('../lib/Deskly')
 const pkg = require('../package.json')
 const fs = require('fs')
+const path = require('path')
 const util = require('util')
 const commander = require('commander')
 const wallpaper = require('wallpaper')
@@ -17,7 +18,7 @@ const conf = new Configstore(pkg.name, {
 })
 
 let d = new Deskly()
-let dir = __dirname + '/generated/'
+let dir = path.join(__dirname, 'generated/')
 
 commander
   .version(pkg.version)
@@ -25,10 +26,11 @@ commander
 commander
   .command('generate')
   .description('Generates a new desktop image.')
-  .option("-r, --subreddit <subreddit>", "Specify the subreddit to use.")
-  .option("-s, --sort <sort>", "Specify the sort-type to use.")
-  .option("-l, --limit <limit>", "Specify the limit of posts fetched.")
+  .option('-r, --subreddit <subreddit>', 'Specify the subreddit to use.')
+  .option('-s, --sort <sort>', 'Specify the sort-type to use.')
+  .option('-l, --limit <limit>', 'Specify the limit of posts fetched.')
   .action((options) => {
+    console.log(options)
     let def = conf.all
     let sort = options.sort || def.sort
     let limit = options.limit || def.limit
@@ -38,16 +40,40 @@ commander
     console.log(util.format('Searching for wallpapers on r/%s..', subreddit.green))
 
     d.getPost(promise).then(post => {
-      let path = dir + post.id + '.jpg'
+      let p = dir + post.id + '.jpg'
 
       console.log(util.format('Downloading %s by %s', post.title.green, post.author.green))
       if (!fs.existsSync(dir)) fs.mkdirSync(dir)
       got.stream(post.url)
-        .pipe(fs.createWriteStream(path))
+        .pipe(fs.createWriteStream(p))
         .on('finish', () => {
-          wallpaper.set(path)
-          console.log(util.format('Aand we\'re done! Saved image to %s', path.green))
+          wallpaper.set(p)
+          console.log(util.format('Aand we\'re done! Saved image to %s', p.green))
         })
+    })
+  })
+
+commander
+  .command('path')
+  .description('Returns the path of your current desktop image.')
+  .action(() => {
+    wallpaper.get().then(p => {
+      console.log(p);
+    })
+  })
+
+commander
+  .command('clear-generated')
+  .description('Clears the generated cache of desktop images.')
+  .action((options) => {
+    wallpaper.get().then(curr => {
+      fs.readdir(dir, (err, files) => {
+        for (const file of files) {
+          let p = path.join(dir, file)
+          if (p != curr) fs.unlinkSync(p)
+        }
+        console.log('Successfully cleared desktop images in the cache.')
+      })
     })
   })
 
