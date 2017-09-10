@@ -24,6 +24,61 @@ commander
   .version(pkg.version)
 
 commander
+  .command('show-defaults')
+  .description('Prints the default values.')
+  .action(() => {
+    console.log(conf.all)
+  })
+
+commander
+  .command('clear-defaults')
+  .description('Clears the default values.')
+  .action(() => {
+    conf.clear()
+    console.log('Default values cleared.')
+  })
+
+commander
+  .command('defaults-path')
+  .description('Returns the path of the defaults config file.')
+  .action(() => {
+    console.log(conf.path)
+  })
+
+commander
+  .command('add-subreddit <subreddit>')
+  .action((subreddit) => {
+    let array = conf.get('subreddits')
+    array.push(subreddit)
+    conf.set('subreddits', array)
+  })
+
+commander
+  .command('remove-subreddit <subreddit>')
+  .action((subreddit) => {
+    let array = conf.get('subreddits')
+    let index = array.indexOf(subreddit);
+    if (index > -1) {
+      conf.set('subreddits', array)
+    }
+  })
+
+commander
+  .command('sort-type <type>')
+  .action((type) => {
+    conf.set('sort', type)
+  })
+
+commander
+  .command('path')
+  .description('Returns the path of your current desktop image.')
+  .action(() => {
+    wallpaper.get().then(p => {
+      console.log(p);
+    })
+  })
+
+commander
   .command('generate')
   .description('Generates a new desktop image.')
   .option('-r, --subreddit <subreddit>', 'Specify the subreddit to use.')
@@ -50,15 +105,6 @@ commander
           wallpaper.set(p)
           console.log(util.format('Aand we\'re done! Saved image to %s', p.green))
         })
-    })
-  })
-
-commander
-  .command('path')
-  .description('Returns the path of your current desktop image.')
-  .action(() => {
-    wallpaper.get().then(p => {
-      console.log(p);
     })
   })
 
