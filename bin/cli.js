@@ -85,7 +85,6 @@ commander
   .option('-s, --sort <sort>', 'Specify the sort-type to use.')
   .option('-l, --limit <limit>', 'Specify the limit of posts fetched.')
   .action((options) => {
-    console.log(options)
     let def = conf.all
     let sort = options.sort || def.sort
     let limit = options.limit || def.limit
