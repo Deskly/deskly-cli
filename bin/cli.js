@@ -90,21 +90,28 @@ commander
     let limit = options.limit || def.limit
     let subreddit = options.subreddit || d.getRandomSubreddit(def.subreddits)
     let promise = d.getPosts(sort, limit, subreddit)
+      .catch(error => {
+        console.log(util.format('Failed to retrieve images due to \'%s\'', error.statusMessage.red))
+      })
 
-    console.log(util.format('Searching for wallpapers on r/%s..', subreddit.green))
+    console.log(util.format('Searching for images on r/%s..', subreddit.green))
 
-    d.getPost(promise).then(post => {
-      let p = dir + post.id + '.jpg'
+    d.getPost(promise)
+      .then(post => {
+        let p = dir + post.id + '.jpg'
 
-      console.log(util.format('Downloading %s by %s', post.title.green, post.author.green))
-      if (!fs.existsSync(dir)) fs.mkdirSync(dir)
-      got.stream(post.url)
-        .pipe(fs.createWriteStream(p))
-        .on('finish', () => {
-          wallpaper.set(p)
-          console.log(util.format('Aand we\'re done! Saved image to %s', p.green))
-        })
-    })
+        console.log(util.format('Downloading %s by %s', post.title.green, post.author.green))
+        if (!fs.existsSync(dir)) fs.mkdirSync(dir)
+        got.stream(post.url)
+          .pipe(fs.createWriteStream(p))
+          .on('finish', () => {
+            wallpaper.set(p)
+            console.log(util.format('Aand we\'re done! Saved image to %s', p.green))
+          })
+      })
+      .catch(error => {
+        console.log('Failed to download image.')
+      })
   })
 
 commander
